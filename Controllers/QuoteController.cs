@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using QuotesAPI.Data;
 using QuotesAPI.Models;
 
 namespace QuotesAPI.Controllers
@@ -8,34 +9,43 @@ namespace QuotesAPI.Controllers
     [ApiController]
     public class QuoteController : ControllerBase
     {
-        private static List<Quote> Quotes { get; set; } = new List<Quote>()
-        {
-            new Quote() {Id = 0, Author = "Bilger", Description = "The brain is wider than the sky.", Title = "Inspirational" },
-            new Quote() {Id = 1, Author = "Ilker", Description = "The love stories never have endings.", Title = "Love Stories" }
-        };
+        private QuoteDbContext _quoteDbContext;
 
+        public QuoteController(QuoteDbContext quoteDbContext)
+        {
+            _quoteDbContext = quoteDbContext; 
+        }
+
+        // GET: api/Quote
         [HttpGet]
         public IEnumerable<Quote> Get()
         {
-            return Quotes;
+            return _quoteDbContext.Quotes;
         }
-        
+
+        // GET: api/Quote/5
+        [HttpGet("{id}", Name = "Get")]
+        public string Get(int id)
+        {
+            return "value";
+        }
+
+        // POST: api/Quote
         [HttpPost]
-        public void Post([FromBody]Quote quote)
+        public void Post([FromBody] string value)
         {
-            Quotes.Add(quote);
         }
 
+        // PUT: api/Quote/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]Quote quote)
+        public void Put(int id, [FromBody] string value)
         {
-            Quotes[id] = quote;
         }
 
+        // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-            Quotes.RemoveAt(id);
         }
     }
 }
