@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using QuotesAPI.Data;
 using QuotesAPI.Models;
@@ -18,44 +19,69 @@ namespace QuotesAPI.Controllers
 
         // GET: api/Quote
         [HttpGet]
-        public IEnumerable<Quote> Get()
+        public IActionResult Get()
         {
-            return _quoteDbContext.Quotes;
+            return Ok(_quoteDbContext.Quotes);
         }
 
         // GET: api/Quote/5
         [HttpGet("{id}", Name = "Get")]
-        public Quote Get(int id)
+        public IActionResult Get(int id)
         {
-            return _quoteDbContext.Quotes.Find(id);
+            Quote quote = _quoteDbContext.Quotes.Find(id);
+
+            if (quote == null)
+            {
+                return NotFound("No recourd found against this id...");
+            }
+
+            return Ok(quote);
         }
 
         // POST: api/Quote
         [HttpPost]
-        public void Post([FromBody] Quote quote)
+        public IActionResult Post([FromBody] Quote quote)
         {
             _quoteDbContext.Quotes.Add(quote);
             _quoteDbContext.SaveChanges();
+
+            return StatusCode(StatusCodes.Status201Created);
         }
 
         // PUT: api/Quote/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] Quote quote)
+        public IActionResult Put(int id, [FromBody] Quote quote)
         {
             Quote quoteToChange = _quoteDbContext.Quotes.Find(id);
+
+            if (quoteToChange == null)
+            {
+                return NotFound("No recourd found against this id...");
+            }
+
             quoteToChange.Title = quote.Title;
             quoteToChange.Author = quote.Author;
             quoteToChange.Description = quote.Description;
             _quoteDbContext.SaveChanges();
+
+            return Ok("Updated successfully");
         }
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
             Quote quoteToDelete = _quoteDbContext.Quotes.Find(id);
+
+            if (quoteToDelete == null)
+            {
+                return NotFound("No recourd found against this id...");
+            }
+
             _quoteDbContext.Quotes.Remove(quoteToDelete);
             _quoteDbContext.SaveChanges();
+
+            return Ok("Quote deleted...");
         }
     }
 }
