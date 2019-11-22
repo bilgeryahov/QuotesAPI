@@ -23,6 +23,7 @@ namespace QuotesAPI
             services.AddControllers();
             services.AddDbContext<QuoteDbContext>(option => option.UseSqlServer(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=QuotesDb"));
             services.AddMvc().AddXmlSerializerFormatters();
+            services.AddResponseCaching();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -34,6 +35,8 @@ namespace QuotesAPI
             }
 
             app.UseHttpsRedirection();
+
+            app.UseResponseCaching();
 
             app.UseRouting();
 
