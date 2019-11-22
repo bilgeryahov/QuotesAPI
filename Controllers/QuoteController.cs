@@ -62,6 +62,8 @@ namespace QuotesAPI.Controllers
             quoteToChange.Title = quote.Title;
             quoteToChange.Author = quote.Author;
             quoteToChange.Description = quote.Description;
+            quoteToChange.Type = quote.Type;
+            quoteToChange.CreatedAt = quote.CreatedAt;
             _quoteDbContext.SaveChanges();
 
             return Ok("Updated successfully");
