@@ -38,6 +38,16 @@ namespace QuotesAPI.Controllers
             return Ok(quotes);
         }
 
+        [HttpGet("[action]")]
+        public IActionResult PagingQuote(int? pageNumber, int? pageSize)
+        {
+            IEnumerable<Quote> quotes = _quoteDbContext.Quotes;
+            int currentPageNumber = pageNumber ?? 1;
+            int currentPageSize = pageSize ?? 2;
+
+            return Ok(quotes.Skip((currentPageNumber - 1) * currentPageSize).Take(currentPageSize));
+        }
+
         // GET: api/Quote/5
         [HttpGet("{id}", Name = "Get")]
         public IActionResult Get(int id)
